@@ -86,14 +86,4 @@ Please refer to the function ```get_args()``` in ```util.py``` for the detailed 
 ## Acknowledgement
 Our implementation adapts the code of [CAWs](https://github.com/snap-stanford/CAW) as the code base and extensively adapts it to our purpose. We thank the authors for sharing their code.
 
-## Cite us
-If you find this research useful, please cite our paper:
-```
-@inproceedings{
-yu2025CommunityWalks,
-title={Community-Aware Temporal Walks: Parameter-Free Representation Learning},
-author={He Yu and Jing Liu},
-booktitle={},
-year={2025}
-}
-```
+
