@@ -16,17 +16,27 @@ def compute_edge_weights(df, weight_type='frequency'):
     :return: Updated DataFrame with edge weights
     """
     if weight_type == 'frequency':
-        # Count the number of occurrences of each edge
-        weights = df.groupby(['u', 'i']).size().reset_index(name='weight')
+        # Count the number of occurrences of each edge and keep the latest timestamp
+        weights = df.groupby(['u', 'i']).agg({
+            'ts': 'max'  # Keep the latest timestamp for each edge
+        }).reset_index()
+        weight_counts = df.groupby(['u', 'i']).size().reset_index(name='weight')
+        weights = weights.merge(weight_counts, on=['u', 'i'])
     elif weight_type == 'recency':
         # Compute weights inversely proportional to recency
         current_time = df['ts'].max()
         weights = df.groupby(['u', 'i']).agg({'ts': lambda x: 1 / (current_time - x.mean() + 1)}).reset_index()
         weights.rename(columns={'ts': 'weight'}, inplace=True)
+        # Add back the latest timestamp
+        ts_data = df.groupby(['u', 'i'])['ts'].max().reset_index()
+        weights = weights.merge(ts_data, on=['u', 'i'])
     elif weight_type == 'custom':
         # Define your own custom weight logic here
         weights = df.groupby(['u', 'i']).size().reset_index(name='weight')
         weights['weight'] *= 2  # Example custom rule
+        # Add back the latest timestamp
+        ts_data = df.groupby(['u', 'i'])['ts'].max().reset_index()
+        weights = weights.merge(ts_data, on=['u', 'i'])
     else:
         raise ValueError(f"Unknown weight type: {weight_type}")
     return weights
