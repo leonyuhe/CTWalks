@@ -145,14 +145,21 @@ class NeighborFinder:
 
         for i, (src_idx, cut_time) in enumerate(zip(src_idx_l, cut_time_l)):
             # 根据节点角色筛选有效邻居
-            if src_idx in self.bridging_nodes:
+            src_community = self.community_labels[src_idx] if src_idx < len(self.community_labels) else -1
+            
+            # 孤立节点（社区标签为-1）：采样所有邻居
+            if src_community == -1:
+                valid_neighbors = self.adj_list[src_idx]
+            elif src_idx in self.bridging_nodes:
                 # 桥接节点：只采样跨社区的邻居
                 valid_neighbors = [n for n in self.adj_list[src_idx] if
-                                   self.community_labels[n[0]] != self.community_labels[src_idx]]
+                                   n[0] < len(self.community_labels) and 
+                                   self.community_labels[n[0]] != src_community]
             else:
                 # 非桥接节点：只采样社区内部的邻居
                 valid_neighbors = [n for n in self.adj_list[src_idx] if
-                                   self.community_labels[n[0]] == self.community_labels[src_idx]]
+                                   n[0] < len(self.community_labels) and 
+                                   self.community_labels[n[0]] == src_community]
 
             # 如果没有有效邻居，跳过
             if len(valid_neighbors) == 0:
@@ -239,7 +246,9 @@ class NeighborFinder:
                 if dst not in visited:
                     if community_constrained and current_node not in self.bridging_nodes:
                         # Only allow intra-community neighbors
-                        if self.community_labels[dst] != self.community_labels[current_node]:
+                        current_community = self.community_labels[current_node] if current_node < len(self.community_labels) else -1
+                        dst_community = self.community_labels[dst] if dst < len(self.community_labels) else -1
+                        if current_community != -1 and dst_community != current_community:
                             continue
                     visited.add(dst)
                     neighbors.append((dst, ts, weight))
