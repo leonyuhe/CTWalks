@@ -99,7 +99,7 @@ def assign_community_and_update(new_nodes, test_src_l, test_dst_l, community_lab
         # 统计邻居的社区信息
         neighbor_communities = {}
         for neighbor in neighbors:
-            if neighbor in community_labels:
+            if neighbor < len(community_labels) and community_labels[neighbor] != -1:
                 community = community_labels[neighbor]
                 neighbor_communities[community] = neighbor_communities.get(community, 0) + 1  # 默认权重为1
 
@@ -189,7 +189,8 @@ for _, row in train_g_df.iterrows():
 
 # Step 2: 执行社区划分
 partition = community_detection(weighted_adj_list)
-community_labels = [partition[node] for node in range(len(weighted_adj_list))]
+# 修复：处理不在partition中的节点（孤立节点）
+community_labels = [partition.get(node, -1) for node in range(len(weighted_adj_list))]
 np.save('./data/{}_community_labels.npy'.format(args.data), community_labels)
 
 # Step 3: 标记桥接节点和非桥接节点
@@ -203,7 +204,9 @@ n_feat_with_community = np.hstack([n_feat, np.array(community_labels).reshape(-1
 val_src_l, val_dst_l, val_ts_l, val_e_idx_l, val_label_l = \
     src_l[valid_val_flag], dst_l[valid_val_flag], ts_l[valid_val_flag], \
     e_idx_l[valid_val_flag], label_l[valid_val_flag]
-val_new_nodes = set(val_src_l).union(set(val_dst_l)) - set(weighted_adj_list.keys())
+# 找出训练集中有边的节点
+nodes_in_train = set(i for i, neighbors in enumerate(weighted_adj_list) if len(neighbors) > 0)
+val_new_nodes = set(val_src_l).union(set(val_dst_l)) - nodes_in_train
 # 更新社区标签和桥接节点
 community_labels, bridging_nodes = assign_community_and_update(
     val_new_nodes, val_src_l, val_dst_l, community_labels, bridging_nodes
@@ -212,7 +215,7 @@ test_src_l, test_dst_l, test_ts_l, test_e_idx_l, test_label_l = \
     src_l[valid_test_flag], dst_l[valid_test_flag], ts_l[valid_test_flag], \
     e_idx_l[valid_test_flag], label_l[valid_test_flag]
 
-test_new_nodes = set(test_src_l).union(set(test_dst_l)) - set(weighted_adj_list.keys())
+test_new_nodes = set(test_src_l).union(set(test_dst_l)) - nodes_in_train
 # 更新社区标签和桥接节点
 community_labels, bridging_nodes = assign_community_and_update(
     test_new_nodes, test_src_l, test_dst_l, community_labels, bridging_nodes
@@ -236,7 +239,7 @@ for src, dst, eidx, ts in zip(src_l, dst_l, e_idx_l, ts_l):
     full_adj_list[src].append((dst, eidx, ts))
     full_adj_list[dst].append((src, eidx, ts))
 
-full_ngh_finder = NeighborFinder(full_adj_list, bridging_nodes,community_labels, temporal_bias=args.temporal_bias, spatial_bias=args.spatial_bias,
+full_ngh_finder = NeighborFinder(full_adj_list, community_labels, bridging_nodes, temporal_bias=args.temporal_bias, spatial_bias=args.spatial_bias,
                                  ee_bias=args.ee_bias, use_cache=args.ngh_cache, sample_method=args.pos_sample,
                                  limit_ngh_span=args.limit_ngh_span, ngh_span=args.ngh_span)
 
@@ -248,7 +251,7 @@ for src, dst, eidx, ts in zip(val_src_l, val_dst_l, val_e_idx_l, val_ts_l):
     partial_adj_list[src].append((dst, eidx, ts))
     partial_adj_list[dst].append((src, eidx, ts))
 
-partial_ngh_finder = NeighborFinder(partial_adj_list, bridging_nodes,community_labels,temporal_bias=args.temporal_bias, spatial_bias=args.spatial_bias,
+partial_ngh_finder = NeighborFinder(partial_adj_list, community_labels, bridging_nodes, temporal_bias=args.temporal_bias, spatial_bias=args.spatial_bias,
                                     ee_bias=args.ee_bias, use_cache=args.ngh_cache, sample_method=args.pos_sample,
                                     limit_ngh_span=args.limit_ngh_span, ngh_span=args.ngh_span)
 
