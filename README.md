@@ -1,4 +1,4 @@
-# Community-Aware Temporal Walks: Parameter-Free Representation Learning on Continuous-Time Dynamic Graphs
+# Community-Enhanced Temporal Walks: Debiasing Locality Representation Learning on Continuous-Time Dynamic Graphs
 
 [![PDF link](https://img.shields.io/static/v1?label=PDF&message=Preprint&color=blue&logo=pdf)](https://)
 [![Video link](https://img.shields.io/static/v1?label=Video&message=YouTube&color=red&logo=youtube)](https://www.youtube.com/watch?v=)
