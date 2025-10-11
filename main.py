@@ -1,3 +1,6 @@
+# The informal version for learning and sharing ideas. The commercial version reach out via email.
+# Feel free to explore and share feedback!
+
 import pandas as pd
 from log import *
 from utils import *
