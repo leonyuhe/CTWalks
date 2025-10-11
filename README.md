@@ -1,7 +1,6 @@
 # Community-Enhanced Temporal Walks: Debiasing Locality Representation Learning on Continuous-Time Dynamic Graphs
 
-[![PDF link](https://img.shields.io/static/v1?label=PDF&message=Preprint&color=blue&logo=pdf)](https://)
-[![Video link](https://img.shields.io/static/v1?label=Video&message=YouTube&color=red&logo=youtube)](https://www.youtube.com/watch?v=)
+[![PDF link](https://img.shields.io/static/v1?label=PDF&message=Preprint&color=blue&logo=pdf)](https://ieeexplore.ieee.org/document/11199959)
 
 ## Introduction
 Dynamic graph representation learning plays a crucial role in understanding evolving behaviors. However, existing methods often struggle with flexibility, adaptability, and the preservation of temporal and structural dynamics. To address these issues, we propose Community-aware Temporal Walks (CTWalks), a novel framework for representation learning on continuous-time dynamic graphs. CTWalks integrates three key components: a community-based parameter-free temporal walk sampling mechanism, an anonymization strategy enriched with community labels, and an encoding process that leverages continuous temporal dynamics modeled via ordinary differential equations (ODEs).  This design enables precise modeling of both intra- and inter-community interactions, offering a fine-grained representation of evolving temporal patterns in continuous-time dynamic graphs. CTWalks theoretically overcomes locality bias in walks and establishes its connection to matrix factorization. Experiments on benchmark datasets demonstrate that CTWalks outperforms established methods in temporal link prediction tasks, achieving higher accuracy while maintaining robustness.
