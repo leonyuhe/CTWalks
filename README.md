@@ -9,8 +9,6 @@ Dynamic graph representation learning plays a crucial role in understanding evol
 <img src="./assets/img.png" width="600">
 </p>
 
-## Authors
-[He Yu]
 
 ## Requirements
 - matplotlib==3.3.4
@@ -81,6 +79,24 @@ To train on the Taobao dastaset:
 ## Detailed usage
 
 Please refer to the function ```get_args()``` in ```util.py``` for the detailed description of each hyperparameter.
+
+## 📝 Citation
+
+If you find CTWalks useful for your research, please consider citing the associated [paper](https://ieeexplore.ieee.org/document/11199959):
+
+```
+@ARTICLE{11199959,
+  author={Yu, He and Liu, Jing},
+  journal={IEEE Transactions on Cybernetics}, 
+  title={Community-Enhanced Temporal Walks: Debiasing Locality Representation Learning on Continuous-Time Dynamic Graphs}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={1-14},
+  keywords={Community structure;CTDG;dynamic graph;link prediction;representation learning},
+  doi={10.1109/TCYB.2025.3616970}}
+
+```
 
 
 ## Acknowledgement
